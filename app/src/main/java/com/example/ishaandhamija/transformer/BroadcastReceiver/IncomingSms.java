@@ -35,11 +35,13 @@ public class IncomingSms extends BroadcastReceiver {
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
 
-                    Log.d("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
+                    Log.d("SmsReceiver", "SenderNumber: "+ senderNum + "\nMessage: " + message);
+
+                    Log.d("SmsReceiver", "onReceive: " + message.indexOf('\n'));
 
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context,
-                            "senderNum: "+ senderNum + ", message: " + message, duration);
+                            "SenderNumber: "+ senderNum + "\nMessage: " + message, duration);
                     toast.show();
 
                 }
