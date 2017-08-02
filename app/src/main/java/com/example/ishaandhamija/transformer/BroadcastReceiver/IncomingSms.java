@@ -75,13 +75,17 @@ public class IncomingSms extends BroadcastReceiver {
                         if (myFile.exists()){
                             String pdfText = readPDF("/Transformer/" + gsmID.toString() + ".pdf");
 
-                            pdfText = pdfText + "\n" + message + "\nTime : " + time + "\nDate : " + date;
+                            int g = pdfText.lastIndexOf(".\n");
+                            Integer indexNo = Character.getNumericValue(pdfText.charAt(g-1));
+                            indexNo++;
+
+                            pdfText = pdfText + "\n" + indexNo.toString() + ".\n" + message + "\nTime : " + time + "\nDate : " + date;
 
                             createPDF(pdfText, gsmID.toString());
                         }
                         else{
                             String pdfText = "";
-                            pdfText = pdfText + "\nGSM ID : " + gsmID + "\n\n" + message + "\nTime : " + time + "\nDate : " + date;
+                            pdfText = pdfText + "\nGSM ID : " + gsmID + "\n\n1.\n" + message + "\nTime : " + time + "\nDate : " + date;
                             createPDF(pdfText, gsmID.toString());
                         }
                     }
