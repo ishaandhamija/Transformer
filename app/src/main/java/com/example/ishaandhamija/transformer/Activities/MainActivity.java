@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final Integer REQ_CODE = 1001;
     RecyclerView allContactsRV;
-    AllContactsAdapter allContactsAdapter;
+    public  static AllContactsAdapter allContactsAdapter;
     public static ArrayList<PDFFile> allContactsArrayList;
 
     @Override
@@ -104,4 +104,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static AllContactsAdapter getAdapter(){
+        return allContactsAdapter;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        displayPDFs();
+    }
 }

@@ -10,6 +10,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.ishaandhamija.transformer.Activities.MainActivity;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -21,6 +22,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by ishaandhamija on 31/07/17.
@@ -48,13 +52,10 @@ public class IncomingSms extends BroadcastReceiver {
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
 
-//                    Log.d("SmsReceiver", "SenderNumber: "+ senderNum + "\nMessage: " + message);
-//
-//                    Log.d("SmsReceiver", "onReceive: " + message.indexOf('\n'));
-//
-//                    Log.d("SmsReceiver", "onReceive: " + message.indexOf('z'));
-//
-//                    Log.d("SmsReceiver", "onReceive: " + message.toLowerCase().contains("Hello".toLowerCase()));
+                    Calendar cl = Calendar.getInstance();
+                    cl.setTimeInMillis(currentMessage.getTimestampMillis());
+                    String date = "" + cl.get(Calendar.DAY_OF_MONTH) + "/" + cl.get(Calendar.MONTH) + "/" + cl.get(Calendar.YEAR);
+                    String time = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
 
                     if (message.contains("GSM ID")){
 
@@ -74,13 +75,13 @@ public class IncomingSms extends BroadcastReceiver {
                         if (myFile.exists()){
                             String pdfText = readPDF("/Transformer/" + gsmID.toString() + ".pdf");
 
-                            pdfText = pdfText + "\n" + message;
+                            pdfText = pdfText + "\n" + message + "\nTime : " + time + "\nDate : " + date;
 
                             createPDF(pdfText, gsmID.toString());
                         }
                         else{
                             String pdfText = "";
-                            pdfText = pdfText + "\nGSM ID : " + gsmID + "\n\n" + message;
+                            pdfText = pdfText + "\nGSM ID : " + gsmID + "\n\n" + message + "\nTime : " + time + "\nDate : " + date;
                             createPDF(pdfText, gsmID.toString());
                         }
                     }
@@ -102,6 +103,7 @@ public class IncomingSms extends BroadcastReceiver {
         doc.open();
         doc.add(new Paragraph(msg));
         doc.close();
+        MainActivity.getAdapter().notifyDataSetChanged();
     }
 
     private String readPDF(String filename) throws IOException {
@@ -116,6 +118,11 @@ public class IncomingSms extends BroadcastReceiver {
 
         return parsedText;
 
+    }
+
+    private String toDate(long timestamp) {
+        Date date = new Date(timestamp * 1000);
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
 }
